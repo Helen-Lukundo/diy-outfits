@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DIY Outfits</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#FCF6F0;--blush:#FBE4DE;--card:#fff;--ink:#2A2336;--pink:#FF5C8A;--violet:#6C5CE7;--mint:#2EC4B6;--yellow:#FFC93C}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:var(--ink);min-height:100vh;padding:18px;transition:background .5s;
+    background:radial-gradient(circle at 12% 18%,color-mix(in srgb,var(--yellow) 22%,transparent),transparent 38%),radial-gradient(circle at 88% 82%,color-mix(in srgb,var(--violet) 18%,transparent),transparent 42%),var(--paper)}
+  .app{max-width:940px;margin:0 auto}
+  .logo{width:62px;height:62px;border-radius:18px;background:var(--blush);border:2.5px dashed var(--ink);display:grid;place-items:center;position:relative;flex:none;box-shadow:4px 5px 0 var(--ink)}
+  .logo span{font-family:'Bricolage Grotesque',serif;font-weight:800;font-size:34px;line-height:1;position:absolute}
+  .logo .c{color:var(--violet);transform:translateX(-5px);font-size:40px}
+  .logo .b{color:var(--pink);transform:translateX(8px)}
+  header{display:flex;align-items:center;gap:14px;margin-bottom:16px;flex-wrap:wrap}
+  .title h1{font-family:'Bricolage Grotesque',serif;font-weight:800;font-size:30px;letter-spacing:-.5px;line-height:1}
+  .title p{font-size:13px;font-weight:500;opacity:.65;margin-top:3px}
+  .hud{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+  .pillstat{background:var(--card);border:2px solid var(--ink);border-radius:999px;padding:8px 14px;font-weight:700;box-shadow:3px 3px 0 var(--ink);font-size:14px}
+  .pillstat b{font-family:'Bricolage Grotesque',serif}
+  .stage{display:grid;grid-template-columns:1fr 1.1fr;gap:18px}
+  @media(max-width:720px){.stage{grid-template-columns:1fr}}
+  .panel{background:var(--card);border:2.5px solid var(--ink);border-radius:22px;box-shadow:6px 7px 0 var(--ink);padding:18px}
+  .model-card{display:flex;flex-direction:column;align-items:center}
+  .model-frame{width:100%;background:linear-gradient(180deg,var(--card),var(--blush));border:2px dashed var(--ink);border-radius:16px;padding:8px}
+  svg.doll{width:100%;height:auto;display:block;max-height:62vh}
+  .model-actions{display:flex;gap:10px;margin-top:14px;width:100%}
+  button{font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;border:none}
+  .btn{flex:1;border:2.5px solid var(--ink);border-radius:14px;padding:12px;font-weight:700;font-size:14px;box-shadow:3px 4px 0 var(--ink);transition:transform .07s,box-shadow .07s;background:var(--card);color:var(--ink)}
+  .btn:active{transform:translate(2px,3px);box-shadow:1px 1px 0 var(--ink)}
+  .btn.primary{background:var(--pink);color:#fff}
+  .btn.tiny{flex:none;padding:10px 12px}
+  .gender{display:flex;gap:8px;margin-bottom:14px}
+  .gbtn{flex:1;border:2.5px solid var(--ink);border-radius:14px;background:var(--card);color:var(--ink);padding:10px;font-weight:700;box-shadow:2px 3px 0 var(--ink)}
+  .gbtn.on{background:var(--pink);color:#fff}
+  .challenge{background:var(--yellow);border:2.5px solid var(--ink);border-radius:16px;padding:12px 14px;margin-bottom:16px;box-shadow:4px 4px 0 var(--ink)}
+  .challenge .eyebrow{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;opacity:.7}
+  .challenge .prompt{font-family:'Bricolage Grotesque',serif;font-weight:800;font-size:19px;margin-top:2px}
+  .challenge .new{font-size:12px;font-weight:700;text-decoration:underline;background:none;margin-top:6px;color:var(--ink)}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+  .tab{border:2.5px solid var(--ink);border-radius:14px;background:var(--card);padding:10px 12px;font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px;box-shadow:2px 3px 0 var(--ink);color:var(--ink)}
+  .tab .em{font-size:18px}
+  .tab.on{background:var(--violet);color:#fff}
+  .opt-title{font-family:'Bricolage Grotesque',serif;font-weight:800;font-size:18px;margin-bottom:10px}
+  .group h3{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:.7;margin:14px 0 8px}
+  .group h3:first-child{margin-top:0}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .chip{border:2px solid var(--ink);border-radius:11px;background:var(--card);padding:9px 13px;font-size:13px;font-weight:600;color:var(--ink)}
+  .chip.on{background:var(--ink);color:var(--card)}
+  .sw{width:30px;height:30px;border-radius:9px;border:2px solid var(--ink);padding:0}
+  .sw.on{outline:3px solid var(--violet);outline-offset:2px}
+  .splash{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:radial-gradient(circle at 20% 20%,color-mix(in srgb,var(--yellow) 30%,transparent),transparent 40%),radial-gradient(circle at 80% 80%,color-mix(in srgb,var(--violet) 25%,transparent),transparent 45%),var(--paper)}
+  .splash.hide{opacity:0;visibility:hidden;transition:opacity .45s,visibility .45s}
+  .splash-inner{text-align:center;padding:24px;animation:rise .6s ease}
+  @keyframes rise{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+  .splash .logo{width:128px;height:128px;border-radius:32px;margin:0 auto 22px;box-shadow:8px 9px 0 var(--ink);animation:wig 3s ease-in-out infinite}
+  @keyframes wig{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+  .splash .logo span{font-size:66px}.splash .logo .c{font-size:78px;transform:translateX(-9px)}.splash .logo .b{transform:translateX(15px)}
+  .splash h1{font-family:'Bricolage Grotesque',serif;font-weight:800;font-size:clamp(40px,11vw,68px);letter-spacing:-1px;line-height:.95}
+  .splash .by{margin-top:10px;font-weight:700;font-size:16px;display:inline-block;background:var(--blush);border:2px dashed var(--ink);border-radius:999px;padding:6px 18px}
+  .splash .by b{font-family:'Bricolage Grotesque',serif;color:var(--violet)}
+  .splash .ask{margin-top:28px;font-weight:700;font-size:15px;opacity:.75}
+  .choose{margin-top:14px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .play{background:var(--pink);color:#fff;border:2.5px solid var(--ink);border-radius:16px;padding:15px 30px;font-size:18px;font-weight:800;font-family:'Bricolage Grotesque',serif;letter-spacing:.5px;box-shadow:5px 6px 0 var(--ink);transition:transform .07s,box-shadow .07s}
+  .play.alt{background:var(--violet)}
+  .play:active{transform:translate(3px,4px);box-shadow:2px 2px 0 var(--ink)}
+  .overlay{position:fixed;inset:0;background:rgba(42,35,54,.55);display:none;place-items:center;padding:20px;z-index:30}
+  .overlay.show{display:grid}
+  .verdict{background:var(--paper);border:3px solid var(--ink);border-radius:22px;box-shadow:8px 9px 0 var(--ink);max-width:340px;width:100%;padding:24px;text-align:center;animation:pop .25s ease}
+  @keyframes pop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+  .verdict .stars{font-size:30px;letter-spacing:3px;margin:4px 0 10px;color:var(--yellow);-webkit-text-stroke:1px var(--ink)}
+  .verdict h2{font-family:'Bricolage Grotesque',serif;font-size:23px;margin-bottom:6px}
+  .verdict p{font-size:14px;opacity:.8;margin-bottom:8px}
+  .verdict .reward{font-weight:700;color:var(--violet);margin-bottom:16px}
+  .verdict .btn{width:100%}
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(140%);background:var(--ink);color:var(--card);padding:12px 20px;border-radius:999px;font-weight:700;transition:transform .3s;z-index:40}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+  .wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:12px;max-height:58vh;overflow:auto;padding:2px}
+  .wcard{border:2px solid var(--ink);border-radius:14px;background:var(--blush);padding:6px;box-shadow:3px 3px 0 var(--ink)}
+  .wthumb svg{width:100%;height:auto;display:block;background:var(--card);border-radius:10px}
+  .wbtns{display:flex;gap:6px;margin-top:6px}
+  .wbtn{flex:1;border:2px solid var(--ink);border-radius:9px;background:var(--card);color:var(--ink);font-weight:700;padding:6px;font-size:12px}
+  .wbtn.del{flex:none;width:34px;background:var(--pink);color:#fff}
+  .runway-box{background:var(--paper);border:3px solid var(--ink);border-radius:22px;box-shadow:8px 9px 0 var(--ink);max-width:420px;width:100%;padding:18px;position:relative}
+  .rclose{position:absolute;top:10px;right:12px;background:none;font-size:20px;font-weight:800;color:var(--ink);cursor:pointer}
+  .runway-stage{position:relative;height:340px;border-radius:16px;overflow:hidden;border:2px solid var(--ink);background:linear-gradient(180deg,#1b1430 0%,#2a2050 55%,#3a2d63 55%,#5a4a86 100%)}
+  .runway-stage::before{content:'';position:absolute;left:50%;bottom:0;width:62%;height:46%;transform:translateX(-50%);background:linear-gradient(180deg,rgba(255,255,255,.20),rgba(255,255,255,.02));clip-path:polygon(36% 0,64% 0,100% 100%,0 100%)}
+  .runway-doll{position:absolute;left:50%;bottom:6px;width:155px;transform:translateX(-50%)}
+  .runway-doll svg{width:100%;height:auto;display:block;transform-origin:center bottom;filter:drop-shadow(0 6px 10px rgba(0,0,0,.45))}
+  .sparkles{position:absolute;top:14px;left:0;right:0;text-align:center;font-size:26px;display:none;z-index:2;animation:twinkle 1s ease-in-out infinite}
+  @keyframes twinkle{0%,100%{opacity:.4;transform:scale(.9)}50%{opacity:1;transform:scale(1.15)}}
+  .runway-label{text-align:center;font-weight:700;margin:12px 0 8px}
+  .runway-controls{display:flex;gap:8px;justify-content:center;margin-bottom:12px}
+  .runway-controls button{border:2.5px solid var(--ink);border-radius:12px;background:var(--card);color:var(--ink);font-weight:800;padding:9px 16px;box-shadow:2px 3px 0 var(--ink);cursor:pointer}
+  .pose-row{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}
+  .runway-doll.pose-strut svg{animation:strut 1s ease-in-out infinite}
+  @keyframes strut{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-10px) rotate(1.5deg)}}
+  .runway-doll.pose-hip svg{transform:rotate(-6deg)}
+  .runway-doll.pose-twirl svg{animation:twirl 1.2s linear infinite}
+  @keyframes twirl{0%{transform:scaleX(1)}50%{transform:scaleX(-1)}100%{transform:scaleX(1)}}
+  .runway-doll.pose-jump svg{animation:jump .7s ease-in-out infinite}
+  @keyframes jump{0%,100%{transform:translateY(0)}40%{transform:translateY(-28px)}}
+  .runway-doll.pose-wave svg{animation:wavey 1.1s ease-in-out infinite}
+  @keyframes wavey{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(6deg)}}
+  .runway-doll.pose-pose28 svg{animation:pose28 1.1s ease-in-out infinite}
+  @keyframes pose28{0%{transform:rotate(-9deg) scale(1.03)}50%{transform:rotate(9deg) scale(1.1)}100%{transform:rotate(-9deg) scale(1.03)}}
+  .judges-row{display:flex;gap:8px;justify-content:center;margin-top:12px}
+  .jcard{flex:1;border:2px solid var(--ink);border-radius:14px;background:var(--blush);padding:8px 4px;text-align:center;box-shadow:2px 3px 0 var(--ink)}
+  .jcard .je{font-size:26px;line-height:1}
+  .jcard .jn{font-size:11px;font-weight:700;opacity:.7;margin:2px 0}
+  .jcard .js{font-family:'Bricolage Grotesque',serif;font-weight:800;font-size:23px;min-height:26px}
+  .jcard .js.pop{animation:pop .3s ease}
+  .rverdict{text-align:center;font-weight:700;margin-top:10px;min-height:20px;font-size:14px}
+</style>
+</head>
+<body>
+<div class="splash" id="splash">
+  <div class="splash-inner" id="screenStart">
+    <div class="logo"><span class="c">C</span><span class="b">B</span></div>
+    <h1>DIY Outfits</h1>
+    <div class="by">made by <b>Claree</b></div><br>
+    <button class="play" id="play">▶ Play</button>
+  </div>
+  <div class="splash-inner" id="screenChoose" style="display:none">
+    <h1>Who are<br>we styling?</h1>
+    <div class="choose">
+      <button class="play" data-g="girl">👧 Girl</button>
+      <button class="play alt" data-g="boy">👦 Boy</button>
+    </div>
+  </div>
+</div>
+
+<div class="app">
+  <header>
+    <div class="logo"><span class="c">C</span><span class="b">B</span></div>
+    <div class="title"><h1>DIY Outfits</h1><p>style the look · win the runway</p></div>
+    <div class="hud">
+      <button class="pillstat" id="openWardrobe" style="cursor:pointer">👗 <b id="savedCount">0</b></button>
+      <div class="pillstat" id="themeStat">🎨 <b id="themeName">Blush</b></div>
+      <div class="pillstat">🪙 <b id="coins">0</b></div>
+    </div>
+  </header>
+  <div class="stage">
+    <div class="panel model-card">
+      <div class="model-frame"><svg class="doll" id="doll" viewBox="0 0 300 500" xmlns="http://www.w3.org/2000/svg"></svg></div>
+      <div class="model-actions">
+        <button class="btn tiny" id="surprise">🎲</button>
+        <button class="btn" id="save">📸 Save</button>
+        <button class="btn primary" id="judge">Show the judges</button>
+      </div>
+      <button class="btn" id="runway" style="width:100%;margin-top:10px">🌟 Runway show</button>
+    </div>
+    <div class="panel">
+      <div class="gender" id="gender">
+        <button class="gbtn" data-g="girl">👧 Girl</button>
+        <button class="gbtn" data-g="boy">👦 Boy</button>
+      </div>
+      <div class="challenge">
+        <div class="eyebrow">Today's challenge</div>
+        <div class="prompt" id="prompt">—</div>
+        <button class="new" id="newChallenge">↻ new challenge</button>
+      </div>
+      <div class="tabs" id="tabs"></div>
+      <div id="options"></div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="verdict">
+    <div class="stars" id="vStars">★★★★★</div>
+    <h2 id="vTitle">Stunning!</h2>
+    <p id="vText"></p>
+    <div class="reward" id="vReward"></div>
+    <button class="btn primary" id="vClose">Keep styling</button>
+  </div>
+</div>
+<div class="overlay" id="wardrobe">
+  <div class="verdict" style="max-width:520px;text-align:left">
+    <h2 style="font-family:'Bricolage Grotesque',serif;font-size:23px;margin-bottom:12px">👗 My Wardrobe</h2>
+    <div class="wgrid" id="wardrobeGrid"></div>
+    <button class="btn primary" id="closeWardrobe" style="width:100%;margin-top:14px">Close</button>
+  </div>
+</div>
+<div class="overlay" id="runwayOv">
+  <div class="runway-box">
+    <button class="rclose" id="closeRunway">✕</button>
+    <h2 style="font-family:'Bricolage Grotesque',serif;font-size:22px;margin-bottom:10px">🌟 Runway Show</h2>
+    <div class="runway-stage">
+      <div class="sparkles" id="rSpark">✨🌟✨</div>
+      <div class="runway-doll pose-strut" id="runwayDoll"></div>
+    </div>
+    <div class="runway-label" id="runwayLabel">—</div>
+    <div class="runway-controls">
+      <button id="rPrev">◀</button>
+      <button id="rPlay">▶ Auto</button>
+      <button id="rNext">▶</button>
+    </div>
+    <div class="pose-row" id="poseRow"></div>
+    <button class="btn primary" id="rJudge" style="width:100%;margin-top:12px">👨‍⚖️ Judge this look!</button>
+    <div class="judges-row" id="judgesRow"></div>
+    <div class="rverdict" id="rVerdict"></div>
+  </div>
+</div>
+<div class="toast" id="toast">Saved!</div>
+
+<script>
+const PALETTE=['#FF5C8A','#6C5CE7','#2EC4B6','#FFC93C','#FF8A5C','#5C9DFF','#FFFFFF','#2A2336'];
+const HAIR_COLORS=['#2A2336','#5A3A2E','#C9913B','#E8E2DA','#FF5C8A','#6C5CE7','#2EC4B6'];
+const SKINS=['#F6D2B8','#F1C9A5','#E0A878','#B97A56','#8A5A3C','#5E3B28'];
+
+const STYLES={
+  girl:{
+    hair:[['long','Long'],['bob','Bob'],['bun','Bun'],['pony','Ponytail'],['curly','Curly']],
+    top:[['tee','Tee'],['tank','Tank'],['crop','Crop top'],['hoodie','Hoodie'],['blouse','Blouse'],['dress','Dress']],
+    bottom:[['skirt','Skirt'],['jeans','Jeans'],['shorts','Shorts'],['longskirt','Long skirt']]
+  },
+  boy:{
+    hair:[['short','Short'],['buzz','Buzz'],['spiky','Spiky'],['curlyB','Curly'],['sidepart','Side part']],
+    top:[['tee','Tee'],['polo','Polo'],['jersey','Jersey'],['hoodie','Hoodie'],['vest','Vest'],['suit','Suit']],
+    bottom:[['jeans','Jeans'],['shorts','Shorts'],['cargo','Cargo']]
+  }
+};
+const SHOE_STYLES=[['sneakers','Sneakers'],['boots','Boots'],['sandals','Sandals']];
+const ACCESSORIES=[['glasses','Glasses'],['sunnies','Sunglasses'],['cap','Cap'],['bow','Bow'],['necklace','Necklace'],['earrings','Earrings']];
+const PATTERNS=[['solid','Solid'],['stripes','Stripes'],['dots','Dots'],['hearts','Hearts'],['stars','Stars']];
+
+const CHALLENGES=["Beach day with friends ☀️","Cozy movie night 🍿","First day at a new school 📚","Rooftop birthday party 🎉","Rainy day adventure ☔","Concert in the park 🎶","Picnic in spring 🌷","Big game day 🏟️"];
+const PRAISE=["The judges are obsessed with this combo.","Bold colours, confident styling — chef's kiss.","Effortless and totally on-theme.","That's a runway-ready fit right there.","Clean lines, great palette. Very you."];
+const TITLES=["Stunning!","Iconic.","Showstopper!","So chic.","Trendsetter!"];
+const THEMES=[
+  {name:'Blush',v:{'--paper':'#FCF6F0','--blush':'#FBE4DE','--ink':'#2A2336','--pink':'#FF5C8A','--violet':'#6C5CE7','--yellow':'#FFC93C','--mint':'#2EC4B6'}},
+  {name:'Mint',v:{'--paper':'#EDF7F2','--blush':'#D6EFE4','--ink':'#1F3B33','--pink':'#FF7E9D','--violet':'#1FA98F','--yellow':'#F4C95D','--mint':'#37C9A6'}},
+  {name:'Sunset',v:{'--paper':'#FFF2E9','--blush':'#FFDFCD','--ink':'#4A2530','--pink':'#FF6B6B','--violet':'#C2477E','--yellow':'#FFB14E','--mint':'#FF8A5C'}},
+  {name:'Grape',v:{'--paper':'#F5EFFC','--blush':'#E7DCF8','--ink':'#2E2150','--pink':'#C766E6','--violet':'#7A4FE0','--yellow':'#F2C14E','--mint':'#A07BEA'}},
+  {name:'Bubblegum',v:{'--paper':'#FDEFF7','--blush':'#FBD9EC','--ink':'#3A2150','--pink':'#FF5FA2','--violet':'#5C9DFF','--yellow':'#FFD23F','--mint':'#54D6D6'}}
+];
+
+let state={gender:'girl',skin:SKINS[1],hairStyle:'long',hairColor:HAIR_COLORS[0],topStyle:'tee',topColor:PALETTE[0],topPattern:'solid',bottomStyle:'skirt',bottomColor:PALETTE[1],bottomPattern:'solid',shoeStyle:'sneakers',shoeColor:PALETTE[2],accColor:PALETTE[0],acc:{glasses:false,sunnies:false,cap:false,bow:false,necklace:false,earrings:false}};
+let coins=0,rounds=0,themeIndex=0,activeCat='hair';
+
+function applyTheme(i){const t=THEMES[i];for(const k in t.v)document.documentElement.style.setProperty(k,t.v[k]);document.getElementById('themeName').textContent=t.name;}
+
+const S='stroke="var(--ink)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"';
+const SL='stroke="var(--ink)" stroke-width="3" stroke-linecap="round" fill="none"';
+const DK='fill="rgba(0,0,0,.14)"';
+
+function hairBack(hc){switch(state.hairStyle){
+  case 'long':return `<path d="M100,80 Q100,18 150,18 Q200,18 200,80 L196,266 Q186,278 178,266 L182,112 L118,112 L122,266 Q114,278 104,266 Z" fill="${hc}" ${S}/>`;
+  case 'bob':return `<path d="M102,76 Q102,20 150,20 Q198,20 198,76 L196,150 Q188,160 180,150 L182,100 L118,100 L120,150 Q112,160 104,150 Z" fill="${hc}" ${S}/>`;
+  case 'pony':return `<path d="M186,42 Q224,82 212,160 Q206,206 184,202 Q204,150 176,70 Z" fill="${hc}" ${S}/>`;
+  case 'curly':return `<path d="M150,8 Q98,4 86,52 Q74,98 112,120 L188,120 Q226,98 214,52 Q202,4 150,8 Z" fill="${hc}" ${S}/>`;
+  case 'bun':return `<circle cx="150" cy="30" r="20" fill="${hc}" ${S}/>`;
+  default:return '';
+}}
+function hairFront(hc){
+  const cap=`<path d="M106,80 Q102,26 150,24 Q198,26 194,80 Q180,52 150,54 Q120,52 106,80 Z" fill="${hc}" ${S}/>`;
+  switch(state.hairStyle){
+    case 'bun':return cap+`<circle cx="150" cy="30" r="20" fill="${hc}" ${S}/>`;
+    case 'curly':return `<path d="M104,86 Q100,28 150,24 Q200,28 196,86 Q188,62 176,72 Q170,50 158,64 Q150,44 142,64 Q130,50 124,72 Q112,62 104,86 Z" fill="${hc}" ${S}/>`;
+    case 'short':return `<path d="M104,84 Q102,40 150,38 Q198,40 196,84 Q188,64 150,64 Q112,64 104,84 Z" fill="${hc}" ${S}/>`;
+    case 'buzz':return `<path d="M106,82 Q104,48 150,46 Q196,48 194,82 Q186,70 150,70 Q114,70 106,82 Z" fill="${hc}" ${S} opacity=".85"/>`;
+    case 'spiky':return `<path d="M104,84 Q102,46 150,44 Q198,46 196,84 Q188,66 150,66 Q112,66 104,84 Z" fill="${hc}" ${S}/><path d="M118,46 L126,16 L134,46 M140,44 L150,12 L160,44 M166,46 L174,16 L182,46" fill="${hc}" ${S}/>`;
+    case 'curlyB':return `<path d="M104,86 Q100,40 150,36 Q200,40 196,86 Q188,64 176,72 Q170,52 158,64 Q150,46 142,64 Q130,52 124,72 Q112,64 104,86 Z" fill="${hc}" ${S}/>`;
+    case 'sidepart':return `<path d="M104,86 Q100,42 150,40 Q198,42 196,84 Q190,58 136,60 Q116,56 104,86 Z" fill="${hc}" ${S}/><path d="M150,42 Q176,48 190,72" ${SL}/>`;
+    default:return cap;
+  }
+}
+function skinBody(sk){return `
+  <ellipse cx="150" cy="476" rx="74" ry="13" fill="rgba(42,35,54,.12)"/>
+  <path d="M126,256 L148,256 L148,440 Q148,452 137,452 Q126,452 126,440 Z" fill="${sk}" ${S}/>
+  <path d="M152,256 L174,256 L174,440 Q174,452 163,452 Q152,452 152,440 Z" fill="${sk}" ${S}/>
+  <path d="M118,150 L98,250 Q97,261 108,262 Q117,262 118,251 L130,156 Z" fill="${sk}" ${S}/>
+  <path d="M182,150 L202,250 Q203,261 192,262 Q183,262 182,251 L170,156 Z" fill="${sk}" ${S}/>
+  <circle cx="104" cy="260" r="9" fill="${sk}" ${S}/><circle cx="196" cy="260" r="9" fill="${sk}" ${S}/>
+  <rect x="141" y="116" width="18" height="32" fill="${sk}" ${S}/>
+  <path d="M118,150 Q150,162 182,150 L178,258 Q150,270 122,258 Z" fill="${sk}" ${S}/>`;}
+function head(sk){return `
+  <circle cx="108" cy="90" r="9" fill="${sk}" ${S}/><circle cx="192" cy="90" r="9" fill="${sk}" ${S}/>
+  <ellipse cx="150" cy="86" rx="44" ry="48" fill="${sk}" ${S}/>
+  <ellipse cx="134" cy="88" rx="4" ry="6" fill="var(--ink)"/><ellipse cx="166" cy="88" rx="4" ry="6" fill="var(--ink)"/>
+  <ellipse cx="120" cy="100" rx="7" ry="4" fill="var(--pink)" opacity=".4"/><ellipse cx="180" cy="100" rx="7" ry="4" fill="var(--pink)" opacity=".4"/>
+  <path d="M138,106 Q150,116 162,106" ${SL}/>`;}
+
+const teeSleeves=c=>`<path d="M108,148 L88,182 Q85,192 96,196 L120,164 Z" fill="${c}" ${S}/><path d="M192,148 L212,182 Q215,192 204,196 L180,164 Z" fill="${c}" ${S}/>`;
+function drawTop(c){switch(state.topStyle){
+  case 'tee':return `<path d="M108,148 Q104,140 120,140 L180,140 Q196,140 192,148 L184,260 Q150,270 116,260 Z" fill="${c}" ${S}/>${teeSleeves(c)}<path d="M134,142 Q150,156 166,142" ${SL}/>`;
+  case 'tank':return `<path d="M128,144 L122,260 Q150,270 178,260 L172,144 Z" fill="${c}" ${S}/><path d="M130,146 L138,120" ${SL}/><path d="M170,146 L162,120" ${SL}/>`;
+  case 'crop':return `<path d="M108,148 Q104,140 120,140 L180,140 Q196,140 192,148 L186,208 Q150,218 114,208 Z" fill="${c}" ${S}/>${teeSleeves(c)}<path d="M134,142 Q150,156 166,142" ${SL}/>`;
+  case 'hoodie':return `
+    <path d="M118,150 L98,250 Q97,262 108,263 Q118,263 119,252 L130,158 Z" fill="${c}" ${S}/>
+    <path d="M182,150 L202,250 Q203,262 192,263 Q182,263 181,252 L170,158 Z" fill="${c}" ${S}/>
+    <path d="M108,150 Q104,142 120,142 L180,142 Q196,142 192,150 L186,264 Q150,276 114,264 Z" fill="${c}" ${S}/>
+    <path d="M122,142 Q150,120 178,142 Q150,134 150,134 Q150,134 122,142 Z" fill="${c}" ${S}/>
+    <path d="M126,210 Q150,222 174,210 L172,236 Q150,244 128,236 Z" ${DK} ${S}/>
+    <path d="M142,150 L140,168" ${SL}/><path d="M158,150 L160,168" ${SL}/>`;
+  case 'blouse':return `
+    <path d="M108,150 Q104,142 120,142 L180,142 Q196,142 192,150 L190,256 Q170,248 150,256 Q130,264 110,256 Z" fill="${c}" ${S}/>
+    <path d="M108,150 L84,178 Q80,190 93,196 Q103,178 122,166 Z" fill="${c}" ${S}/>
+    <path d="M192,150 L216,178 Q220,190 207,196 Q197,178 178,166 Z" fill="${c}" ${S}/>
+    <path d="M144,144 L150,154 L156,144 L162,150 L150,162 L138,150 Z" ${DK} ${S}/>`;
+  case 'polo':return `<path d="M108,148 Q104,140 120,140 L180,140 Q196,140 192,148 L184,260 Q150,270 116,260 Z" fill="${c}" ${S}/>${teeSleeves(c)}
+    <path d="M134,142 L150,158 L132,160 Z" fill="${c}" ${S}/><path d="M166,142 L150,158 L168,160 Z" fill="${c}" ${S}/>
+    <path d="M150,158 L150,182" ${SL}/><circle cx="150" cy="168" r="2.4" fill="var(--ink)"/><circle cx="150" cy="178" r="2.4" fill="var(--ink)"/>`;
+  case 'jersey':return `<path d="M108,148 Q104,140 120,140 L180,140 Q196,140 192,148 L184,260 Q150,270 116,260 Z" fill="${c}" ${S}/>${teeSleeves(c)}
+    <path d="M134,142 Q150,156 166,142 L162,150 Q150,160 138,150 Z" fill="rgba(255,255,255,.75)" ${S}/>
+    <text x="150" y="220" text-anchor="middle" font-family="'Bricolage Grotesque',serif" font-weight="800" font-size="40" fill="rgba(255,255,255,.85)" stroke="var(--ink)" stroke-width="1.5">8</text>`;
+  case 'vest':return `<path d="M124,148 L118,258 Q150,268 182,258 L176,148 L160,148 L150,172 L140,148 Z" fill="${c}" ${S}/>
+    <path d="M140,150 L150,174 L160,150" ${SL}/>
+    <circle cx="150" cy="192" r="2.6" fill="var(--ink)"/><circle cx="150" cy="210" r="2.6" fill="var(--ink)"/><circle cx="150" cy="228" r="2.6" fill="var(--ink)"/>`;
+  case 'dress':return `<path d="M110,150 Q106,142 122,142 L178,142 Q194,142 190,150 L178,248 L208,366 Q150,386 92,366 L122,248 Z" fill="${c}" ${S}/>${teeSleeves(c)}<path d="M132,143 Q150,158 168,143" ${SL}/><path d="M122,248 Q150,258 178,248" stroke="var(--ink)" stroke-width="2" fill="none" opacity=".35"/>`;
+  case 'suit':return `
+    <path d="M118,150 L98,250 Q97,261 108,262 Q117,262 118,251 L130,156 Z" fill="${c}" ${S}/>
+    <path d="M182,150 L202,250 Q203,261 192,262 Q183,262 182,251 L170,156 Z" fill="${c}" ${S}/>
+    <path d="M108,148 Q104,140 120,140 L180,140 Q196,140 192,148 L184,262 Q150,272 116,262 Z" fill="${c}" ${S}/>
+    <path d="M138,146 L162,146 L150,214 Z" fill="#ffffff" ${S}/>
+    <path d="M147,150 L153,150 L156,200 L150,212 L144,200 Z" fill="var(--violet)" ${S}/>
+    <path d="M126,146 L150,150 L141,206 Z" ${DK} ${S}/>
+    <path d="M174,146 L150,150 L159,206 Z" ${DK} ${S}/>
+    <circle cx="150" cy="226" r="2.6" fill="var(--ink)"/><circle cx="150" cy="244" r="2.6" fill="var(--ink)"/>`;
+  default:return '';
+}}
+function bottom(c){switch(state.bottomStyle){
+  case 'jeans':return `<path d="M119,256 Q150,266 181,256 L184,300 L168,444 Q168,452 158,452 Q150,452 150,360 Q150,452 142,452 Q132,452 132,444 L116,300 Z" fill="${c}" ${S}/><path d="M150,266 L150,356" ${SL}/>`;
+  case 'skirt':return `<path d="M118,256 Q150,266 182,256 L208,352 Q150,372 92,352 Z" fill="${c}" ${S}/><path d="M150,266 L150,360" stroke="var(--ink)" stroke-width="2" fill="none" opacity=".35"/>`;
+  case 'longskirt':return `<path d="M118,256 Q150,266 182,256 L216,448 Q150,468 84,448 Z" fill="${c}" ${S}/><path d="M150,266 L150,456" stroke="var(--ink)" stroke-width="2" fill="none" opacity=".35"/>`;
+  case 'shorts':return `<path d="M119,256 Q150,266 181,256 L188,328 L164,350 Q150,356 150,330 Q150,356 136,350 L112,328 Z" fill="${c}" ${S}/><path d="M150,266 L150,340" ${SL}/>`;
+  case 'cargo':return `<path d="M117,256 Q150,266 183,256 L190,334 L164,356 Q150,362 150,334 Q150,362 136,356 L110,334 Z" fill="${c}" ${S}/><path d="M150,266 L150,346" ${SL}/>
+    <rect x="116" y="300" width="16" height="20" rx="4" ${DK} ${S}/><rect x="168" y="300" width="16" height="20" rx="4" ${DK} ${S}/>`;
+  default:return '';
+}}
+function shoes(c){switch(state.shoeStyle){
+  case 'sneakers':return `<path d="M120,442 L150,442 L152,462 Q152,474 138,474 L112,474 Q104,474 104,464 Q104,450 120,442 Z" fill="${c}" ${S}/><path d="M180,442 L150,442 L148,462 Q148,474 162,474 L188,474 Q196,474 196,464 Q196,450 180,442 Z" fill="${c}" ${S}/><path d="M105,468 L150,468 M150,468 L195,468" ${SL}/>`;
+  case 'boots':return `<path d="M122,416 L150,416 L150,470 Q150,478 138,478 L114,478 Q106,478 106,470 L108,440 Q110,418 122,416 Z" fill="${c}" ${S}/><path d="M178,416 L150,416 L150,470 Q150,478 162,478 L186,478 Q194,478 194,470 L192,440 Q190,418 178,416 Z" fill="${c}" ${S}/>`;
+  case 'sandals':return `<path d="M108,468 L150,468 Q150,477 139,477 L110,477 Q104,477 104,471 Z" fill="${c}" ${S}/><path d="M114,468 L130,456 M122,468 L134,456" ${SL}/><path d="M192,468 L150,468 Q150,477 161,477 L190,477 Q196,477 196,471 Z" fill="${c}" ${S}/><path d="M186,468 L170,456 M178,468 L166,456" ${SL}/>`;
+  default:return '';
+}}
+const ONE_PIECE=['dress'];
+function markColor(hex){if(!hex||hex[0]!=='#'||hex.length<7)return 'rgba(0,0,0,.28)';const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);const lum=0.299*r+0.587*g+0.114*b;return lum>150?'rgba(0,0,0,.30)':'rgba(255,255,255,.6)';}
+function patternDef(id,color,pat){const m=markColor(color);const bg=`<rect width="100%" height="100%" fill="${color}"/>`;
+  if(pat==='stripes')return `<pattern id="${id}" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">${bg}<rect width="7" height="14" fill="${m}"/></pattern>`;
+  if(pat==='dots')return `<pattern id="${id}" width="18" height="18" patternUnits="userSpaceOnUse">${bg}<circle cx="9" cy="9" r="3.2" fill="${m}"/></pattern>`;
+  if(pat==='hearts')return `<pattern id="${id}" width="20" height="20" patternUnits="userSpaceOnUse">${bg}<path d="M10,15 C3,9 5,4 10,8 C15,4 17,9 10,15 Z" fill="${m}"/></pattern>`;
+  if(pat==='stars')return `<pattern id="${id}" width="20" height="20" patternUnits="userSpaceOnUse">${bg}<path d="M10,4 L12,9 L17,9 L13,12 L15,17 L10,14 L5,17 L7,12 L3,9 L8,9 Z" fill="${m}"/></pattern>`;
+  return bg;}
+let _defs='',_uid=0;
+function patternToken(id,color,pat){if(!pat||pat==='solid')return color;_defs+=patternDef(id,color,pat);return `url(#${id})`;}
+function buildDoll(){
+  _defs='';const id='d'+(_uid++);
+  const sk=state.skin,op=ONE_PIECE.includes(state.topStyle);
+  const topFill=patternToken(id+'T',state.topColor,state.topPattern);
+  const botFill=patternToken(id+'B',state.bottomColor,state.bottomPattern);
+  const body=hairBack(state.hairColor)+skinBody(sk)+(op?'':bottom(botFill))+drawTop(topFill)+shoes(state.shoeColor)+head(sk)+hairFront(state.hairColor)+renderAcc();
+  return (_defs?`<defs>${_defs}</defs>`:'')+body;
+}
+function renderDoll(){document.getElementById('doll').innerHTML=buildDoll();}
+function dollSVGFor(s){const cur=state;state=s;const inner=buildDoll();state=cur;return `<svg viewBox="0 0 300 500" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;}
+
+function accGlasses(ac){return `<g fill="none" stroke="${ac}" stroke-width="3" stroke-linecap="round"><circle cx="134" cy="88" r="12"/><circle cx="166" cy="88" r="12"/><path d="M146,88 L154,88"/><path d="M122,85 L113,83"/><path d="M178,85 L187,83"/></g>`;}
+function accSunnies(ac){return `<g ${S}><circle cx="134" cy="88" r="13" fill="${ac}"/><circle cx="166" cy="88" r="13" fill="${ac}"/></g><path d="M147,86 L153,86 M121,84 L112,81 M179,84 L188,81" stroke="${ac}" stroke-width="3" fill="none" stroke-linecap="round"/>`;}
+function accCap(ac){return `<path d="M106,72 Q150,22 194,72 Q150,58 106,72 Z" fill="${ac}" ${S}/><path d="M150,68 L216,80 Q218,90 206,89 L150,78 Z" fill="${ac}" ${S}/><circle cx="150" cy="33" r="4" fill="${ac}" ${S}/>`;}
+function accBow(ac){return `<path d="M150,40 L126,26 L126,54 Z" fill="${ac}" ${S}/><path d="M150,40 L174,26 L174,54 Z" fill="${ac}" ${S}/><circle cx="150" cy="40" r="6" fill="${ac}" ${S}/>`;}
+function accNecklace(ac){return `<path d="M133,150 Q150,170 167,150" fill="none" stroke="${ac}" stroke-width="3" stroke-linecap="round"/><circle cx="150" cy="168" r="4.5" fill="${ac}" ${S}/>`;}
+function accEarrings(ac){return `<circle cx="106" cy="103" r="3.6" fill="${ac}" ${S}/><circle cx="194" cy="103" r="3.6" fill="${ac}" ${S}/>`;}
+function renderAcc(){const ac=state.accColor,a=state.acc;let s='';if(a.necklace)s+=accNecklace(ac);if(a.glasses)s+=accGlasses(ac);if(a.sunnies)s+=accSunnies(ac);if(a.earrings)s+=accEarrings(ac);if(a.bow)s+=accBow(ac);if(a.cap)s+=accCap(ac);return s;}
+
+const CATEGORIES=[
+  {key:'skin',em:'🎨',label:'Skin',colorKey:'skin',colors:SKINS},
+  {key:'hair',em:'💇',label:'Hair',styleKey:'hairStyle',colorKey:'hairColor',colors:HAIR_COLORS},
+  {key:'top',em:'👕',label:'Top',styleKey:'topStyle',colorKey:'topColor',colors:PALETTE,patternKey:'topPattern'},
+  {key:'bottom',em:'👖',label:'Bottom',styleKey:'bottomStyle',colorKey:'bottomColor',colors:PALETTE,patternKey:'bottomPattern'},
+  {key:'shoes',em:'👟',label:'Shoes',styleKey:'shoeStyle',colorKey:'shoeColor',colors:PALETTE},
+  {key:'acc',em:'🎀',label:'Accessories',colorKey:'accColor',colors:PALETTE}
+];
+function getStyles(key){if(key==='shoes')return SHOE_STYLES;if(STYLES[state.gender][key])return STYLES[state.gender][key];return null;}
+
+function renderGender(){document.querySelectorAll('#gender .gbtn').forEach(b=>b.classList.toggle('on',b.dataset.g===state.gender));}
+function renderTabs(){const t=document.getElementById('tabs');t.innerHTML='';CATEGORIES.forEach(c=>{const b=document.createElement('button');b.className='tab'+(activeCat===c.key?' on':'');b.innerHTML=`<span class="em">${c.em}</span>${c.label}`;b.onclick=()=>{activeCat=c.key;renderTabs();renderOptions();};t.appendChild(b);});}
+function renderOptions(){
+  const cat=CATEGORIES.find(c=>c.key===activeCat);
+  const box=document.getElementById('options');
+  if(cat.key==='acc'){
+    box.innerHTML=`<div class="opt-title">🎀 Accessories</div><p style="font-size:13px;opacity:.7;margin-bottom:10px">Tap to add or remove — wear as many as you like.</p><div class="group"><h3>Items</h3><div class="row" id="accRow"></div><h3>Colour</h3><div class="row" id="colorRow"></div></div>`;
+    const ar=document.getElementById('accRow');
+    ACCESSORIES.forEach(([k,lab])=>{const b=document.createElement('button');b.className='chip'+(state.acc[k]?' on':'');b.textContent=lab;b.onclick=()=>{state.acc[k]=!state.acc[k];renderDoll();renderOptions();};ar.appendChild(b);});
+    const cr0=document.getElementById('colorRow');PALETTE.forEach(col=>{const b=document.createElement('button');b.className='sw'+(state.accColor===col?' on':'');b.style.background=col;b.onclick=()=>{state.accColor=col;renderDoll();renderOptions();};cr0.appendChild(b);});
+    return;
+  }
+  const styles=cat.styleKey?getStyles(cat.key):null;
+  let html=`<div class="opt-title">${cat.em} ${cat.label}</div>`;
+  if(cat.key==='bottom'&&ONE_PIECE.includes(state.topStyle))html+=`<p style="font-size:13px;opacity:.7;margin-bottom:10px">👗 A dress is on — pick a different top to use bottoms.</p>`;
+  html+=`<div class="group">`;
+  if(styles)html+=`<h3>Style</h3><div class="row" id="styleRow"></div>`;
+  html+=`<h3>Colour</h3><div class="row" id="colorRow"></div>${cat.patternKey?'<h3>Pattern</h3><div class="row" id="patRow"></div>':''}</div>`;
+  box.innerHTML=html;
+  if(styles){const sr=document.getElementById('styleRow');styles.forEach(([val,lab])=>{const b=document.createElement('button');b.className='chip'+(state[cat.styleKey]===val?' on':'');b.textContent=lab;b.onclick=()=>{state[cat.styleKey]=val;renderDoll();renderOptions();};sr.appendChild(b);});}
+  const cr=document.getElementById('colorRow');cat.colors.forEach(col=>{const b=document.createElement('button');b.className='sw'+(state[cat.colorKey]===col?' on':'');b.style.background=col;b.onclick=()=>{state[cat.colorKey]=col;renderDoll();renderOptions();};cr.appendChild(b);});
+  if(cat.patternKey){const pr=document.getElementById('patRow');PATTERNS.forEach(([val,lab])=>{const b=document.createElement('button');b.className='chip'+(state[cat.patternKey]===val?' on':'');b.textContent=lab;b.onclick=()=>{state[cat.patternKey]=val;renderDoll();renderOptions();};pr.appendChild(b);});}
+}
+
+function setGender(g){
+  state.gender=g;
+  const d=g==='girl'?{hairStyle:'long',topStyle:'tee',bottomStyle:'skirt'}:{hairStyle:'short',topStyle:'tee',bottomStyle:'jeans'};
+  Object.assign(state,d);
+  renderGender();renderTabs();renderOptions();renderDoll();
+}
+
+function newChallenge(){document.getElementById('prompt').textContent=CHALLENGES[Math.floor(Math.random()*CHALLENGES.length)];}
+function judge(){
+  const variety=new Set([state.topColor,state.bottomColor,state.shoeColor]).size;
+  const stars=Math.min(5,3+variety-1),reward=stars*8;coins+=reward;document.getElementById('coins').textContent=coins;
+  document.getElementById('vStars').textContent='★★★★★☆☆☆☆☆'.slice(5-stars,10-stars);
+  document.getElementById('vTitle').textContent=TITLES[Math.floor(Math.random()*TITLES.length)];
+  document.getElementById('vText').textContent=PRAISE[Math.floor(Math.random()*PRAISE.length)];
+  rounds++;let extra='';
+  if(rounds%2===0){themeIndex=(themeIndex+1)%THEMES.length;applyTheme(themeIndex);extra=` · New theme: ${THEMES[themeIndex].name}! ✨`;}
+  document.getElementById('vReward').textContent=`+${reward} coins 🪙${extra}`;
+  document.getElementById('overlay').classList.add('show');newChallenge();
+}
+function surprise(){
+  const pick=a=>a[Math.floor(Math.random()*a.length)];
+  state.skin=pick(SKINS);state.hairColor=pick(HAIR_COLORS);state.topColor=pick(PALETTE);state.bottomColor=pick(PALETTE);state.shoeColor=pick(PALETTE);
+  state.hairStyle=pick(STYLES[state.gender].hair)[0];state.topStyle=pick(STYLES[state.gender].top)[0];state.bottomStyle=pick(STYLES[state.gender].bottom)[0];state.shoeStyle=pick(SHOE_STYLES)[0];
+  ACCESSORIES.forEach(([k])=>state.acc[k]=Math.random()<0.3);state.accColor=pick(PALETTE);
+  state.topPattern=pick(PATTERNS)[0];state.bottomPattern=pick(PATTERNS)[0];
+  renderDoll();renderOptions();
+}
+let savedLooks=[];
+function save(){
+  savedLooks.push(JSON.parse(JSON.stringify(state)));
+  document.getElementById('savedCount').textContent=savedLooks.length;
+  const t=document.getElementById('toast');t.textContent=`Look saved to wardrobe! 👗 (${savedLooks.length})`;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1600);
+}
+function renderWardrobe(){
+  const g=document.getElementById('wardrobeGrid');
+  if(!savedLooks.length){g.innerHTML='<p style="opacity:.7;font-weight:600;margin:6px 2px">No looks saved yet — style something and tap 📸 Save.</p>';return;}
+  g.innerHTML='';
+  savedLooks.forEach((look,i)=>{
+    const card=document.createElement('div');card.className='wcard';
+    card.innerHTML=`<div class="wthumb">${dollSVGFor(look)}</div><div class="wbtns"><button class="wbtn wear">Wear</button><button class="wbtn del">✕</button></div>`;
+    card.querySelector('.wear').onclick=()=>{state=JSON.parse(JSON.stringify(look));renderGender();renderTabs();renderOptions();renderDoll();document.getElementById('wardrobe').classList.remove('show');};
+    card.querySelector('.del').onclick=()=>{savedLooks.splice(i,1);document.getElementById('savedCount').textContent=savedLooks.length;renderWardrobe();};
+    g.appendChild(card);
+  });
+}
+
+const POSES=[['strut','Strut'],['hip','Hands on hip'],['twirl','Twirl'],['jump','Jump'],['wave','Wave'],['pose28','Pose 28 🔥']];
+const JUDGES=[['👩‍🎤','Coco'],['🧑‍🎨','Dax'],['👵','Mimi']];
+function renderJudges(scores,animate){const row=document.getElementById('judgesRow');if(!row)return;row.innerHTML='';JUDGES.forEach(([e,n],i)=>{const s=scores?scores[i]:null;const c=document.createElement('div');c.className='jcard';c.innerHTML=`<div class="je">${e}</div><div class="jn">${n}</div><div class="js${animate?' pop':''}">${s!=null?s:'—'}</div>`;row.appendChild(c);});}
+function resetJudges(){renderJudges(null,false);const v=document.getElementById('rVerdict');if(v)v.textContent='';}
+function judgeRunwayLook(){const look=runwayLooks[rIndex];const v=new Set([look.topColor,look.bottomColor,look.shoeColor]).size;const pat=((look.topPattern&&look.topPattern!=='solid')?1:0)+((look.bottomPattern&&look.bottomPattern!=='solid')?1:0);const accN=Object.values(look.acc||{}).filter(Boolean).length;const base=5+v+(pat?1:0)+Math.min(2,accN);const scores=JUDGES.map(()=>Math.max(4,Math.min(10,Math.round(base+(Math.random()*2-1)))));renderJudges(scores,true);const avg=scores.reduce((a,b)=>a+b,0)/scores.length;const reward=Math.round(avg*4);coins+=reward;document.getElementById('coins').textContent=coins;const c=avg>=9?'The judges are on their feet! 👏':avg>=7.5?'Loved on the runway! 💖':avg>=6?'Solid walk, darling.':'Room to dazzle next time. ✨';document.getElementById('rVerdict').textContent=`Average ${avg.toFixed(1)} · ${c} · +${reward} 🪙`;}
+let runwayLooks=[],rIndex=0,rPose='strut',rTimer=null;
+function openRunway(){runwayLooks=savedLooks.length?savedLooks.map(l=>JSON.parse(JSON.stringify(l))):[JSON.parse(JSON.stringify(state))];rIndex=0;rPose='strut';renderPoseRow();renderRunway();resetJudges();document.getElementById('runwayOv').classList.add('show');}
+function renderPoseRow(){const pr=document.getElementById('poseRow');pr.innerHTML='';POSES.forEach(([val,lab])=>{const b=document.createElement('button');b.className='chip'+(rPose===val?' on':'');b.textContent=lab;b.onclick=()=>{rPose=val;renderPoseRow();renderRunway();};pr.appendChild(b);});}
+function renderRunway(){const looks=runwayLooks,look=looks[rIndex],el=document.getElementById('runwayDoll');el.innerHTML=dollSVGFor(look);el.className='runway-doll pose-'+rPose;const nm=(POSES.find(p=>p[0]===rPose)||[])[1]||'';document.getElementById('runwayLabel').textContent=`Look ${rIndex+1} of ${looks.length} · ${nm}`;document.getElementById('rSpark').style.display=rPose==='pose28'?'block':'none';}
+function rStep(d){rIndex=(rIndex+d+runwayLooks.length)%runwayLooks.length;renderRunway();resetJudges();}
+function toggleAuto(){const btn=document.getElementById('rPlay');if(rTimer){clearInterval(rTimer);rTimer=null;btn.textContent='▶ Auto';}else{btn.textContent='⏸ Stop';rTimer=setInterval(()=>rStep(1),1900);}}
+function closeRunway(){if(rTimer){clearInterval(rTimer);rTimer=null;document.getElementById('rPlay').textContent='▶ Auto';}document.getElementById('runwayOv').classList.remove('show');}
+
+document.getElementById('judge').onclick=judge;
+document.getElementById('surprise').onclick=surprise;
+document.getElementById('save').onclick=save;
+document.getElementById('newChallenge').onclick=newChallenge;
+document.getElementById('vClose').onclick=()=>document.getElementById('overlay').classList.remove('show');
+document.getElementById('openWardrobe').onclick=()=>{renderWardrobe();document.getElementById('wardrobe').classList.add('show');};
+document.getElementById('closeWardrobe').onclick=()=>document.getElementById('wardrobe').classList.remove('show');
+document.getElementById('runway').onclick=openRunway;
+document.getElementById('closeRunway').onclick=closeRunway;
+document.getElementById('rPrev').onclick=()=>rStep(-1);
+document.getElementById('rNext').onclick=()=>rStep(1);
+document.getElementById('rPlay').onclick=toggleAuto;
+document.getElementById('rJudge').onclick=judgeRunwayLook;
+document.querySelectorAll('#gender .gbtn').forEach(b=>b.onclick=()=>setGender(b.dataset.g));
+document.getElementById('play').onclick=()=>{const c=document.getElementById('screenChoose');document.getElementById('screenStart').style.display='none';c.style.display='';c.style.animation='none';c.offsetHeight;c.style.animation='';};
+document.querySelectorAll('#screenChoose .play').forEach(b=>b.onclick=()=>{setGender(b.dataset.g);document.getElementById('splash').classList.add('hide');});
+
+applyTheme(0);setGender('girl');newChallenge();
+</script>
+</body>
+</html>
